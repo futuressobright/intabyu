@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, Form, Request
+import os
 import shutil  # Import shutil for file operations
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -32,7 +33,11 @@ async def weather_post(request: Request, zip_code: str = Form(...)):
 
 @app.post("/upload_video")
 async def upload_video(video: UploadFile = File(...)):
-    save_path = f"./uploaded_videos/{video.filename}"
+
+    save_dir = 'uploaded_videos'
+    os.makedirs(save_dir, exist_ok=True)  # Ensure the directory exists
+    save_path = os.path.join(save_dir, video.filename)
+
     with open(save_path, "wb") as buffer:
         shutil.copyfileobj(video.file, buffer)
 
