@@ -1,0 +1,26 @@
+<!-- templates/video.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Question</title>
+</head>
+<body>
+    <form method="post">
+        Question: <input type="text" name="question">
+        <input type="submit" value="Submit Question">
+    </form>
+    {% if question_text %}
+    <div>
+        <h2>Question:</h2>
+        <p>{{ question_text }}</p>
+    </div>
+    <div>
+        <h2>Record your answer:</h2>
+        <video id="videoPreview" width="320" height="240" autoplay></video>
+        <button id="startRecordingBtn">Start Recording</button>
+        <button id="stopRecordingBtn" style="display:none;">Stop Recording</button>
+    </div>
+    {% endif %}
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

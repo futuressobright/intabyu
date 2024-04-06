@@ -1,0 +1,19 @@
+<!-- templates/home.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question Recorder</title>
+</head>
+<body>
+    <form id="questionForm">
+        <label for="questionInput">Enter your question:</label>
+        <input type="text" id="questionInput" name="question" required>
+        <input type="submit" value="Submit Question">
+    </form>
+    <button id="speakBtn" style="display:none;">Read Question</button>
+    <button id="startRecordingBtn" style="display:none;">Start Recording</button>
+    <div id="videoContainer"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

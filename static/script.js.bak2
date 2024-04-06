@@ -1,0 +1,46 @@
+let mediaRecorder;
+let recordedBlobs;
+
+document.getElementById('startRecordingBtn').addEventListener('click', () => {
+    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+        .then(stream => {
+            document.getElementById('videoPreview').srcObject = stream;
+            recordedBlobs = [];
+            mediaRecorder = new MediaRecorder(stream, {mimeType: 'video/webm'});
+            mediaRecorder.ondataavailable = event => {
+                if (event.data && event.data.size > 0) {
+                    recordedBlobs.push(event.data);
+                }
+            };
+            mediaRecorder.start();
+            // Update button visibility
+            document.getElementById('startRecordingBtn').style.display = 'none';
+            document.getElementById('stopRecordingBtn').style.display = 'inline';
+        })
+        .catch(console.error); // Always handle errors
+});
+
+document.getElementById('stopRecordingBtn').addEventListener('click', () => {
+    mediaRecorder.stop();
+    document.getElementById('videoPreview').srcObject.getTracks().forEach(track => track.stop());
+    // Optionally, handle the recorded video (e.g., download or upload)
+    const videoBlob = new Blob(recordedBlobs, {type: 'video/webm'});
+    const url = URL.createObjectURL(videoBlob);
+
+    // Example for downloading the video
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'recorded_video.webm';
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }, 100);
+
+    // Update button visibility
+    document.getElementById('startRecordingBtn').style.display = 'inline';
+    document.getElementById('stopRecordingBtn').style.display = 'none';
+});
